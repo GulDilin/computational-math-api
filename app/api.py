@@ -66,8 +66,8 @@ class LagrangeApprox(Resource):
                         'name': 'Original',
                         'type': 'line',
                         'data': [{
-                            'x': el,
-                            'y': funct.func(el)
+                            'x': round(el * 1000) / 1000,
+                            'y': round(funct.func(el) * 1000) / 1000
                         } for el in x]
                     }, {
                         'name': 'Dots',
@@ -80,8 +80,8 @@ class LagrangeApprox(Resource):
                         'name': 'Approximate',
                         'type': 'line',
                         'data': [{
-                            'x': el,
-                            'y': lagrang.approx(funct.func, base_x, el)
+                            'x': round(el * 1000) / 1000,
+                            'y': round(lagrang.approx(funct.func, base_x, el)* 1000) / 1000
                         } for el in x]
                     }
                 ]}

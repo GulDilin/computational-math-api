@@ -67,7 +67,7 @@ class LagrangeApprox(Resource):
             print(f'approx = {[funct.func(el) for el in base_x]}')
             print(f'approx = {[lagrang.approx(funct.func, base_x, el) for el in base_x]}')
 
-            if new_x:
+            if new_x is not None:
                 if new_x > right:
                     right = new_x
                 elif new_x < left:
@@ -102,7 +102,7 @@ class LagrangeApprox(Resource):
                             'y': round(lagrang.approx(funct.func, base_x, el)* 1000) / 1000
                         } for el in x]
                     })
-            if new_x:
+            if new_x is not None:
                 res.append({
                     'name': 'New dot',
                     'type': 'scatter',

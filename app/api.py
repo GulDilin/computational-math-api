@@ -68,9 +68,9 @@ class LagrangeApprox(Resource):
             print(f'approx = {[lagrang.approx(funct.func, base_x, el) for el in base_x]}')
 
             if new_x:
-                if new_x < right:
+                if new_x > right:
                     right = new_x
-                elif new_x > left:
+                elif new_x < left:
                     left = new_x
                 new_y =lagrang.approx(funct.func, base_x, new_x)
 

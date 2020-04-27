@@ -45,6 +45,16 @@ class LagrangeApprox(Resource):
                 except Exception:
                     return {'error': 'approximate is optional bool parameter'}
 
+            new_x = None
+            new_y = None
+            if 'new_x' in data:
+                if not is_approx:
+                    return {'error': 'new_x can be used only with approx'}
+                try:
+                    new_x = float(data['new_x'])
+                except Exception:
+                    return {'error': 'new_x is optional float parameter'}
+
             if left > right:
                 left, right = right, left
 
@@ -56,13 +66,18 @@ class LagrangeApprox(Resource):
             print(f'base x = {base_x}')
             print(f'approx = {[funct.func(el) for el in base_x]}')
             print(f'approx = {[lagrang.approx(funct.func, base_x, el) for el in base_x]}')
+
+            if new_x:
+                if new_x < right:
+                    right = new_x
+                elif new_x > left:
+                    left = new_x
+                new_y =lagrang.approx(funct.func, base_x, new_x)
+
             x = [left + (right - left) / 500 * i for i in range(500 + 1)]
             print(f'x {x[0]} {x[-1]}')
-            # y = [funct.func(el) for el in x]
-            if is_approx:
-                # approx_y = [lagrang.approx(funct.func, base_x, el) for el in x]
-                return {'series': [
-                    {
+
+            res = [{
                         'name': 'Original',
                         'type': 'line',
                         'data': [{
@@ -73,35 +88,31 @@ class LagrangeApprox(Resource):
                         'name': 'Dots',
                         'type': 'scatter',
                         'data': [{
-                            'x': el,
-                            'y': funct.func(el)
+                            'x': round(el * 1000) / 1000,
+                            'y': round(funct.func(el) * 1000) / 1000
                         } for el in base_x]
-                    }, {
+                    }]
+
+            if is_approx:
+                res.append({
                         'name': 'Approximate',
                         'type': 'line',
                         'data': [{
                             'x': round(el * 1000) / 1000,
                             'y': round(lagrang.approx(funct.func, base_x, el)* 1000) / 1000
                         } for el in x]
-                    }
-                ]}
-            else:
-                return {'series': [
-                    {
-                        'name': 'Original',
-                        'type': 'line',
-                        'data': [{
-                            'x': el,
-                            'y': funct.func(el)
-                        } for el in x]
-                    }, {
-                        'name': 'Dots',
-                        'type': 'scatter',
-                        'data': [{
-                            'x': el,
-                            'y': funct.func(el)
-                        } for el in base_x]
-                    }
-                ]}
+                    })
+            if new_x:
+                res.append({
+                    'name': 'New dot',
+                    'type': 'scatter',
+                    'data': [{
+                        'x': new_x,
+                        'y': new_y
+                    }]
+                })
+                return {'series': res, "new_y": new_y}
+
+            return {'series': res}
         except Exception as e:
             return {'error': str(e)}, 400

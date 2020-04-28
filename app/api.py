@@ -33,7 +33,7 @@ class LagrangeApprox(Resource):
                 return {'error': 'left and right need to be decimal'}, 400
 
             try:
-                x = 0
+                x = left
                 eval(data['function'])
             except Exception as ex:
                 return {'error': 'function cannot be recognized'}, 400

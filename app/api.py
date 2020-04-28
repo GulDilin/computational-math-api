@@ -100,7 +100,7 @@ class LagrangeApprox(Resource):
                         'type': 'scatter',
                         'data': [{
                             'x': base_x[i],
-                            'y': f[i] * 1000
+                            'y': f[i]
                         } for i in range(len(base_x))]
                     }]
 

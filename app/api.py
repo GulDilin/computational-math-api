@@ -63,16 +63,25 @@ class LagrangeApprox(Resource):
             d = abs(right - left) / (points_count - 1)
             print(f'd = {d}')
             base_x = [left + d * i for i in range(int(points_count))]
+            if 'correct_x' in data:
+                for el in data['correct_x']:
+                    base_x[el['index']] = float(el['x'])
+
             print(f'base x = {base_x}')
-            print(f'approx = {[funct.func(el) for el in base_x]}')
-            print(f'approx = {[lagrang.approx(funct.func, base_x, el) for el in base_x]}')
+            print(f'func = {[funct.func(el) for el in base_x]}')
+            f = [funct.func(el) for el in base_x]
+
+            if 'correct_y' in data:
+                for el in data['correct_y']:
+                    f[el['index']] = float(el['y'])
+            print(f'approx = {[lagrang.approx(f, base_x, el) for el in base_x]}')
 
             if new_x is not None:
                 if new_x > right:
                     right = new_x
                 elif new_x < left:
                     left = new_x
-                new_y =lagrang.approx(funct.func, base_x, new_x)
+                new_y =lagrang.approx(f, base_x, new_x)
 
             x = [left + (right - left) / 500 * i for i in range(500 + 1)]
             print(f'x {x[0]} {x[-1]}')
@@ -88,9 +97,9 @@ class LagrangeApprox(Resource):
                         'name': 'Dots',
                         'type': 'scatter',
                         'data': [{
-                            'x': round(el * 1000) / 1000,
-                            'y': round(funct.func(el) * 1000) / 1000
-                        } for el in base_x]
+                            'x': round(base_x[i] * 1000) / 1000,
+                            'y': round(f[i] * 1000) / 1000
+                        } for i in range(len(base_x))]
                     }]
 
             if is_approx:
@@ -99,7 +108,7 @@ class LagrangeApprox(Resource):
                         'type': 'line',
                         'data': [{
                             'x': round(el * 1000) / 1000,
-                            'y': round(lagrang.approx(funct.func, base_x, el)* 1000) / 1000
+                            'y': round(lagrang.approx(f, base_x, el)* 1000) / 1000
                         } for el in x]
                     })
             if new_x is not None:

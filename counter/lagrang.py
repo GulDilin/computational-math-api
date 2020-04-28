@@ -3,7 +3,7 @@ from functools import reduce
 
 def l(f, x, new_x, ind):
     return reduce(lambda k, y: k * y,
-                  [(new_x - x[i]) / (x[ind] - x[i]) for i in range(len(x)) if i != ind]) * f(x[ind])
+                  [(new_x - x[i]) / (x[ind] - x[i]) for i in range(len(x)) if i != ind]) * f[ind]
 
 
 def approx(f, x, new_x):

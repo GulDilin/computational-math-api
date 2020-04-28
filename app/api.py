@@ -92,15 +92,15 @@ class LagrangeApprox(Resource):
                         'name': 'Original',
                         'type': 'line',
                         'data': [{
-                            'x': round(el * 1000) / 1000,
-                            'y': round(funct.func(el) * 1000) / 1000
+                            'x': el,
+                            'y': funct.func(el)
                         } for el in x]
                     }, {
                         'name': 'Dots',
                         'type': 'scatter',
                         'data': [{
-                            'x': round(base_x[i] * 1000) / 1000,
-                            'y': round(f[i] * 1000) / 1000
+                            'x': base_x[i],
+                            'y': f[i] * 1000
                         } for i in range(len(base_x))]
                     }]
 
@@ -109,8 +109,8 @@ class LagrangeApprox(Resource):
                         'name': 'Approximate',
                         'type': 'line',
                         'data': [{
-                            'x': round(el * 1000) / 1000,
-                            'y': round(lagrang.approx(f, base_x, el)* 1000) / 1000
+                            'x': el,
+                            'y': lagrang.approx(f, base_x, el)
                         } for el in x]
                     })
             if new_x is not None:

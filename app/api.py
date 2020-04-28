@@ -106,7 +106,7 @@ class LagrangeApprox(Resource):
 
             if is_approx:
                 res.append({
-                        'name': 'Approximate',
+                        'name': 'Interpolate',
                         'type': 'line',
                         'data': [{
                             'x': el,

@@ -67,6 +67,8 @@ class LagrangeApprox(Resource):
                 for el in data['correct_x']:
                     base_x[el['index']] = float(el['x'])
 
+            left, right = min(base_x), max(base_x)
+
             print(f'base x = {base_x}')
             print(f'func = {[funct.func(el) for el in base_x]}')
             f = [funct.func(el) for el in base_x]

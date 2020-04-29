@@ -30,7 +30,7 @@ class LagrangeApprox(Resource):
                 right = float(data['right'])
                 points_count = float(data['points_count'])
                 if points_count > 100:
-                    return {'error': 'Too many dots for interpolation'}
+                    return {'error': 'Too many dots for interpolation'}, 400
             except Exception as ex:
                 return {'error': 'left and right need to be decimal'}, 400
 
@@ -63,17 +63,17 @@ class LagrangeApprox(Resource):
                 try:
                     is_approx = bool(data['approximate'])
                 except Exception:
-                    return {'error': 'approximate is optional bool parameter'}
+                    return {'error': 'approximate is optional bool parameter'}, 400
 
             new_x = None
             new_y = None
             if 'new_x' in data:
                 if not is_approx:
-                    return {'error': 'new_x can be used only with approx'}
+                    return {'error': 'new_x can be used only with approx'}, 400
                 try:
                     new_x = float(data['new_x'])
                 except Exception:
-                    return {'error': 'new_x is optional float parameter'}
+                    return {'error': 'new_x is optional float parameter'}, 400
 
             if left > right:
                 left, right = right, left

@@ -37,6 +37,9 @@ class LagrangeApprox(Resource):
             try:
                 x = left
                 eval(data['function'])
+            except NameError:
+                return {'error': 'function cannot be recognized'}, 400
+
             except Exception as ex:
                 left_error = True
 
@@ -47,7 +50,7 @@ class LagrangeApprox(Resource):
                 right_error = True
 
             if left_error and right_error:
-                return {'error': 'function cannot be recognized'}, 400
+                return {'error': 'function cannot be counted in that limits'}, 400
             elif left_error:
                 return {'error': 'function cannot be counted in left limit'}, 400
             elif right_error:

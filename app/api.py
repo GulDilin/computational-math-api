@@ -32,11 +32,26 @@ class LagrangeApprox(Resource):
             except Exception as ex:
                 return {'error': 'left and right need to be decimal'}, 400
 
+            left_error = False
+            right_error = False
             try:
                 x = left
                 eval(data['function'])
             except Exception as ex:
+                left_error = True
+
+            try:
+                x = right
+                eval(data['function'])
+            except Exception as ex:
+                right_error = True
+
+            if left_error and right_error:
                 return {'error': 'function cannot be recognized'}, 400
+            elif left_error:
+                return {'error': 'function cannot be counted in left limit'}, 400
+            elif right_error:
+                return {'error': 'function cannot be counted in right limit'}, 400
 
             is_approx = False
             if 'approximate' in data:
@@ -65,13 +80,18 @@ class LagrangeApprox(Resource):
             base_x = [left + d * i for i in range(int(points_count))]
             if 'correct_x' in data:
                 for el in data['correct_x']:
+                    if el in base_x:
+                        return {'error': 'corrected X already in use'}, 400
                     base_x[el['index']] = float(el['x'])
 
             left, right = min(base_x), max(base_x)
 
             print(f'base x = {base_x}')
             print(f'func = {[funct.func(el) for el in base_x]}')
-            f = [funct.func(el) for el in base_x]
+            try:
+                f = [funct.func(el) for el in base_x]
+            except Exception:
+                return {'error': 'function cannot be counted in some dot'}, 400
 
             if 'correct_y' in data:
                 for el in data['correct_y']:

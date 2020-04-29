@@ -29,6 +29,8 @@ class LagrangeApprox(Resource):
                 left = float(data['left'])
                 right = float(data['right'])
                 points_count = float(data['points_count'])
+                if points_count > 100:
+                    return {'error': 'Too many dots for interpolation'}
             except Exception as ex:
                 return {'error': 'left and right need to be decimal'}, 400
 

@@ -37,11 +37,11 @@ class LagrangeApprox(Resource):
             try:
                 x = left
                 eval(data['function'])
-            except NameError:
+            except (NameError, SyntaxError):
                 return {'error': 'function cannot be recognized'}, 400
-
-            except Exception as ex:
+            except Exception:
                 left_error = True
+
 
             try:
                 x = right
@@ -83,7 +83,7 @@ class LagrangeApprox(Resource):
             base_x = [left + d * i for i in range(int(points_count))]
             if 'correct_x' in data:
                 for el in data['correct_x']:
-                    if el in base_x:
+                    if float(el['x']) in base_x:
                         return {'error': 'corrected X already in use'}, 400
                     base_x[el['index']] = float(el['x'])
 

@@ -155,27 +155,27 @@ class LagrangeApprox(Resource):
 
 
 class DifferentialEquations(Resource):
-    methods = {
-        'runge-kutt': runge_kutt.solve,
-        'malna': malna.solve
-    }
 
-    methods_names = {
-        'runge-kutt': 'Runge-Kutt',
-        'malna': 'Malna'
-    }
 
     def get(self):
+        methods_names = {
+            'runge-kutt': 'Runge-Kutt',
+            'malna': 'Malna'
+        }
         return {
             'available_methods': [
                 {
                     'name': v,
                     'value': k
-                } for k, v in self.methods_names.items()
+                } for k, v in methods_names.items()
             ]
         }
 
     def post(self):
+        methods = {
+            'runge-kutt': runge_kutt.solve,
+            'malna': malna.solve
+        }
         try:
             data = json.loads(request.data)
             print(request.data)
@@ -185,8 +185,8 @@ class DifferentialEquations(Resource):
                 return {'error': 'method is required'}, 400
 
             method = str(data['method'])
-            if method not in self.methods:
-                return {'error': f'method {method} is not available.\nAvailable methods: {list(self.methods.keys())}'}, 400
+            if method not in method:
+                return {'error': f'method {method} is not available.\nAvailable methods: {list(method.keys())}'}, 400
 
             try:
                 left = float(data['left'])
@@ -240,8 +240,9 @@ class DifferentialEquations(Resource):
             base_x = [left + d * i for i in range(int(points_count))]
 
             try:
-                y = self.methods[method](funct.func, base_x, y_0)
-            except Exception:
+                y = methods[method](funct.func, base_x, y_0)
+            except Exception as e:
+                print(e)
                 return {'error': 'cannot be solved'}, 400
 
             print(f'base x = {base_x}')

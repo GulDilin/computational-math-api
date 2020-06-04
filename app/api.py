@@ -44,7 +44,6 @@ class LagrangeApprox(Resource):
             except Exception:
                 left_error = True
 
-
             try:
                 x = right
                 eval(data['function'])
@@ -108,36 +107,36 @@ class LagrangeApprox(Resource):
                     right = new_x
                 elif new_x < left:
                     left = new_x
-                new_y =lagrang.interpolate(f, base_x, new_x)
+                new_y = lagrang.interpolate(f, base_x, new_x)
 
             x = [left + (right - left) / 500 * i for i in range(500 + 1)]
             print(f'x {x[0]} {x[-1]}')
 
             res = [{
-                        'name': 'Original',
-                        'type': 'line',
-                        'data': [{
-                            'x': el,
-                            'y': funct.func(el)
-                        } for el in x]
-                    }, {
-                        'name': 'Dots',
-                        'type': 'scatter',
-                        'data': [{
-                            'x': base_x[i],
-                            'y': f[i]
-                        } for i in range(len(base_x))]
-                    }]
+                'name': 'Original',
+                'type': 'line',
+                'data': [{
+                    'x': el,
+                    'y': funct.func(el)
+                } for el in x]
+            }, {
+                'name': 'Dots',
+                'type': 'scatter',
+                'data': [{
+                    'x': base_x[i],
+                    'y': f[i]
+                } for i in range(len(base_x))]
+            }]
 
             if is_approx:
                 res.append({
-                        'name': 'Interpolate',
-                        'type': 'line',
-                        'data': [{
-                            'x': el,
-                            'y': lagrang.interpolate(f, base_x, el)
-                        } for el in x]
-                    })
+                    'name': 'Interpolate',
+                    'type': 'line',
+                    'data': [{
+                        'x': el,
+                        'y': lagrang.interpolate(f, base_x, el)
+                    } for el in x]
+                })
             if new_x is not None:
                 res.append({
                     'name': 'New dot',
@@ -155,12 +154,10 @@ class LagrangeApprox(Resource):
 
 
 class DifferentialEquations(Resource):
-
-
     def get(self):
         methods_names = {
             'runge-kutt': 'Runge-Kutt',
-            'malna': 'Malna'
+            'malna': 'Milna'
         }
         return {
             'available_methods': [
@@ -194,8 +191,8 @@ class DifferentialEquations(Resource):
                 points_count = float(data['points_count'])
                 if points_count < 5:
                     return {'error': 'There need to be at least 5 dots'}, 400
-                if points_count > 100:
-                    return {'error': 'Too many dots'}, 400
+                if points_count > 50:
+                    return {'error': 'Too many dots. 50 is max'}, 400
             except Exception as ex:
                 return {'error': 'left and right need to be decimal'}, 400
 
